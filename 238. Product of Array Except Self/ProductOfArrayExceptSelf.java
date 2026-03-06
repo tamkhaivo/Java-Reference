@@ -96,6 +96,42 @@ public class ProductOfArrayExceptSelf {
         return result;
     }
 
+    /**
+     * Approach 4: Your Single-Pass Solution (Highly Optimized)
+     * Time Complexity: O(N)
+     * Space Complexity: O(1) auxiliary space
+     * 
+     * Trade-off: This is an incredibly clever optimization! By iterating from both
+     * the front and the back simultaneously, you are calculating the prefix (left)
+     * and
+     * postfix (right) running products in a single pass without extra arrays.
+     */
+    public int[] productExceptSelfOriginal1(int[] nums) {
+        int len = nums.length;
+        int[] result = new int[len];
+
+        // Initialize the array with 1s so we can safely multiply against it initially
+        Arrays.fill(result, 1);
+
+        int left = 1;
+        int right = 1;
+
+        // Single Pass: 'idx' moves forward, 'len - idx - 1' moves backward
+        for (int idx = 0; idx < len; idx++) {
+            // Apply the running left product to the current forward index
+            result[idx] *= left;
+
+            // Apply the running right product to the current backward index
+            result[len - idx - 1] *= right;
+
+            // Update our running left and right products for the next iteration step
+            left *= nums[idx];
+            right *= nums[len - idx - 1];
+        }
+
+        return result;
+    }
+
     // ==========================================
     // Modular Testing Framework
     // ==========================================
@@ -143,6 +179,7 @@ public class ProductOfArrayExceptSelf {
                 solution::productExceptSelfOptimal);
         algorithms.put("Solution 2: Left & Right Arrays O(N) Time / O(N) Space", solution::productExceptSelfArrays);
         algorithms.put("Solution 3: Original Setup O(N^2) Time / O(1) Space", solution::productExceptSelfOriginal);
+        algorithms.put("Solution 4: Single-Pass Original O(N) Time / O(1) Space", solution::productExceptSelfOriginal1);
 
         // 2. Define Test Cases
         TestCase[] testCases = {
