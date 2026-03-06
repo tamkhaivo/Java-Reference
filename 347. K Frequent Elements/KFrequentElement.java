@@ -124,6 +124,28 @@ public class KFrequentElement {
         return kLargestItem;
     }
 
+    public int[] topKFrequentOriginal1(int[] nums, int k) {
+        HashMap<Integer, Integer> frequencyTable = new HashMap<>();
+
+        for (int num : nums) {
+            frequencyTable.put(num, frequencyTable.getOrDefault(num, 0) + 1);
+        }
+
+        PriorityQueue<Integer> minHeap = new PriorityQueue<>((a, b) -> frequencyTable.get(a) - frequencyTable.get(b));
+        for (int num : frequencyTable.keySet()) {
+            minHeap.add(num);
+            if (minHeap.size() > k)
+                minHeap.poll();
+        }
+
+        ArrayList<Integer> result = new ArrayList<>();
+        while (minHeap.size() > 0) {
+            result.add(minHeap.poll());
+        }
+
+        return result.stream().mapToInt(i -> i).toArray();
+    }
+
     // ==========================================
     // Modular Testing Framework
     // ==========================================
