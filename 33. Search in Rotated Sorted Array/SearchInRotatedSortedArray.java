@@ -59,6 +59,45 @@ public class SearchInRotatedSortedArray {
     }
 
     /**
+     * Approach 1b: Your Optimized Binary Search (Optimal Time & Space)
+     * Time Complexity: O(log N)
+     * Space Complexity: O(1)
+     * 
+     * Trade-off: Functionally identical to Approach 1, but utilizes local variables
+     * (leftNum, rightNum, midNum) to reduce array lookups, which can
+     * microscopically
+     * improve constant-time bounds in tight CPU execution. The conditional logic
+     * cleanly checks
+     * `midNum >= leftNum` to track sorted halves with maximum efficiency.
+     */
+    public int searchOptimal2(int[] nums, int target) {
+        int left = 0;
+        int right = nums.length - 1;
+        while (left <= right) {
+            int mid = (left + right) / 2;
+            int midNum = nums[mid];
+            int leftNum = nums[left];
+            int rightNum = nums[right];
+
+            if (midNum == target)
+                return mid;
+            if (midNum >= leftNum) { // Left-Side Sorted
+                if (leftNum <= target && target < midNum)
+                    right = mid - 1;
+                else
+                    left = mid + 1;
+            } else {
+                if (midNum < target && target <= rightNum)
+                    left = mid + 1;
+                else
+                    right = mid - 1;
+            }
+        }
+        return -1;
+
+    }
+
+    /**
      * Approach 2: Brute Force (Linear Scan)
      * Time Complexity: O(N)
      * Space Complexity: O(1)
@@ -121,6 +160,7 @@ public class SearchInRotatedSortedArray {
         // 1. Define Algorithms to Test
         Map<String, BiFunction<int[], Integer, Integer>> algorithms = new java.util.LinkedHashMap<>();
         algorithms.put("Solution 1: Modified Binary Search O(log N) / O(1)", solution::searchOptimal);
+        algorithms.put("Solution 1b: Your Optimized Binary Search O(log N)", solution::searchOptimal2);
         algorithms.put("Solution 2: Brute Force O(N) / O(1)", solution::searchBruteForce);
 
         // 2. Define Test Cases
